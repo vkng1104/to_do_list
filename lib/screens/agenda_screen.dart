@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:dotted_border/dotted_border.dart';
 import '../models/task.dart';
 import '../widgets/buttons.dart';
 import '../widgets/date_picker.dart';
@@ -54,26 +55,37 @@ class _AgendaScreenState extends State<AgendaScreen> {
       backgroundColor: Colors.white,
       appBar: _appBar(),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // first part
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(DateFormat.yMMMMd().format(DateTime.now())),
-                  Text("Today")
-                ],
-              ),
-              MyButton(label: "+ Add Task", onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddTaskPage()),
-                );
-                setState(() {});
-              },)
-            ],
-          ),
-          // second part
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Column(
+          //         children: [
+          //           Text(DateFormat.yMMMMd().format(DateTime.now())),
+          //           Text("Today")
+          //         ],
+          //       ),
+          //       MyButton(label: Text(
+          //         "Create Task",
+          //         style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+          //       ), onTap: () async {
+          //         await Navigator.of(context).push(
+          //           MaterialPageRoute(builder: (context) => AddTaskPage()),
+          //         );
+          //         setState(() {});
+          //       },)
+          //     ],
+          //   ),
+          // ),
           _dateSelection(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: const Text("OnGoing", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ),
           _tasksDisplay(list.where((task) =>
           task.startTime.year == _selectedDate.year &&
               task.startTime.month == _selectedDate.month &&
@@ -87,7 +99,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     List<String> abbrMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     List<String> months = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     return Container(
-      color: Color(0xFFE4EDFF),
+      color: Color(0xFFF5FBFF),
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
@@ -173,6 +185,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   color: Colors.grey
               ),
               enabledMonthText: false,
+              dateChangedFromOutside: true,
               onDateChange: (date) => setState(() => _selectedDate = date),
             ),
           )
@@ -184,7 +197,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
   _getDateFromUser() async{
     DateTime? _pickerDate = await showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: _selectedDate,
         firstDate: DateTime(2015),
         lastDate: DateTime(2121)
     );
@@ -203,12 +216,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
           itemBuilder: (context, index) {
             List<Task> curList = selectedList.where((task) => task.startTime.hour == hours[index].hour).toList();
             return Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(DateFormat('h:mm a').format(hours[index])),
-                    MySeparator(color: Colors.grey, dashWidth: 5,),
+                    Text(DateFormat('ha').format(hours[index])),
+                    MySeparator(color: Colors.grey, dashWidth: 2.5,),
                     Container(
                       padding: EdgeInsets.only(top: 3),
                       child: Column(
@@ -244,17 +257,13 @@ class _AgendaScreenState extends State<AgendaScreen> {
                                     // taskWidget(list[0]),
                                     for(int i = 0; i < curList.length; i++)
                                       taskWidget(curList[i]),
+
                                     _addTask[index] ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        MyButton(label: "+ Add Task", onTap: () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (context) => AddTaskPage()),
-                                          );
-                                          setState(() {});
-                                        },),
+                                        addTaskButton(),
                                       ],
-                                    ) : Container(height: 50,),
+                                    ) : Container(height: 35,),
                                   ],
                                 )
                             )
@@ -268,6 +277,39 @@ class _AgendaScreenState extends State<AgendaScreen> {
         )
     );
   }
+
+  Widget addTaskButton() => Container(
+    margin: EdgeInsets.only(top: 5),
+    decoration:BoxDecoration(
+      color: Color(0xFFF5FBFF),
+      borderRadius: BorderRadius.all(Radius.circular(15)),
+    ),
+    child: DottedBorder(
+      color: Color.fromARGB(255, 115, 211, 255),
+      dashPattern: [7, 5],
+      strokeWidth: 1.5,
+      borderType: BorderType.RRect,
+      radius: Radius.circular(15),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        child: Container(
+            height: 99,
+            width: 284,
+            color: Color(0xFFF5FBFF),
+            alignment: Alignment.center,
+            child: MyButton(label: Text(
+              "+ Add Task",
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+            ), onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddTaskPage()),
+              );
+              setState(() {});
+            },)
+        ),
+      ),
+    ),
+  );
 
   Widget taskWidget(Task task) => Center(
     child: Container(

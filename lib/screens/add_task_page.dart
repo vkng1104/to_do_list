@@ -107,7 +107,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _colorPallete(),
-                      MyButton(label: "Create Task", onTap: () => _validate())
+                      MyButton(label: Text(
+                        "Create Task",
+                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+                      ), onTap: () => _validate())
                     ],
                   ),
                 )

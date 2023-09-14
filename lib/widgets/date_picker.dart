@@ -93,6 +93,9 @@ class DatePicker extends StatefulWidget {
   /// Include month or not
   final bool enabledMonthText;
 
+  /// outside update Date
+  final bool dateChangedFromOutside;
+
 
   DatePicker(
       this.startDate, {
@@ -112,7 +115,8 @@ class DatePicker extends StatefulWidget {
         this.daysCount = 500,
         this.onDateChange,
         this.locale = "en_US",
-        this.enabledMonthText = true
+        this.enabledMonthText = true,
+        this.dateChangedFromOutside = false
       }) : assert(
   activeDates == null || inactiveDates == null,
   "Can't "
@@ -165,6 +169,9 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.dateChangedFromOutside == true) {
+      _currentDate = widget.initialSelectedDate;
+    }
     return Container(
       height: widget.height,
       child: ListView.builder(

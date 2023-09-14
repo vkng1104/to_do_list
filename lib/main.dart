@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/screens/agenda_screen.dart';
+import 'screens/agenda_screen.dart';
 
 
 void main() {
