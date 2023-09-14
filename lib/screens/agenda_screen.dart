@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:dotted_border/dotted_border.dart';
 import '../models/task.dart';
@@ -11,32 +12,26 @@ import 'add_task_page.dart';
 
 List<Task> list = [
   Task(
-      field: "Frontend",
-      stage: "",
-      course: "Lesson 6: Flexbox",
-      startTime: DateTime(2023, 10, 10, 9),
-      endTime: DateTime(2023, 10, 10, 10),
-      state: 0,
+      title: "Frontend",
+      note: "Lesson 6: Flexbox",
+      startTime: DateTime(2023,10,10,9),
+      endTime: DateTime(2023,10,10,10),
       color: Colors.orange
   ),
   Task(
-      field: "SQL",
-      stage: "",
-      course: "Lesson 2: NoSQL Database",
-      startTime: DateTime(2023, 10, 10, 12),
-      endTime: DateTime(2023, 10, 10, 13),
-      state: 0,
+      title: "SQL",
+      note: "Lesson 2: NoSQL Database",
+      startTime: DateTime(2023,10,10,12),
+      endTime: DateTime(2023,10,10,13),
       color: Colors.pink
   ),
   Task(
-      field: "Flutter",
-      stage: "",
-      course: "Lesson 2: Navigation",
-      startTime: DateTime(2023, 10, 10, 13),
-      endTime: DateTime(2023, 10, 10, 14),
-      state: 0,
-      color:  Colors.blue
-  )
+      title: "Flutter",
+      note: "Lesson 2: Navigation",
+      startTime: DateTime(2023,10,10,13),
+      endTime: DateTime(2023,10,10,14),
+      color: Colors.blue
+  ),
 ];
 
 class AgendaScreen extends StatefulWidget {
@@ -300,12 +295,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             child: MyButton(label: Text(
               "+ Add Task",
               style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
-            ), onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AddTaskPage()),
-              );
-              setState(() {});
-            },)
+            ), onTap: () => Get.to(AddTaskPage()))
         ),
       ),
     ),
@@ -321,8 +311,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(task.field, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-          Text(task.course, style: TextStyle(fontSize: 12, color: Colors.white)),
+          Text(task.title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(task.note, style: TextStyle(fontSize: 12, color: Colors.white)),
           SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

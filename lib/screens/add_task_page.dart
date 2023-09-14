@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task.dart';
@@ -127,16 +128,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
       DateTime startTime = DateFormat("hh:mm a").parse(_startTime);
       DateTime endTime = DateFormat("hh:mm a").parse(_endTime);
       Task newTask = Task(
-          field: _titleController.text,
-          course: _descriptionController.text,
-          stage: "",
-          startTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, startTime.hour, startTime.minute),
-          endTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, endTime.hour, endTime.minute),
-          state: 0,
-          color: colorList[_selectedColor]
+        title: _titleController.text,
+        note: _descriptionController.text,
+        startTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, startTime.hour, startTime.minute),
+        endTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, endTime.hour, endTime.minute),
+        color: colorList[_selectedColor],
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
       );
       list.add(newTask);
-      Navigator.of(context).pop();
+      Get.back();
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
