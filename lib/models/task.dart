@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Task {
   int? id;
   String title;
@@ -7,7 +5,7 @@ class Task {
   int isCompleted;
   DateTime startTime;
   DateTime endTime;
-  Color color;
+  int color;
   int remind;
   String repeat;
 
@@ -17,7 +15,7 @@ class Task {
     this.isCompleted = 0,
     required this.startTime,
     required this.endTime,
-    this.color = Colors.blue,
+    this.color = 0,
     this.remind = 5,
     this.repeat = "None"
   });

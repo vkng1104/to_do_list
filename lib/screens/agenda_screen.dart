@@ -16,21 +16,21 @@ List<Task> list = [
       note: "Lesson 6: Flexbox",
       startTime: DateTime(2023,10,10,9),
       endTime: DateTime(2023,10,10,10),
-      color: Colors.orange
+      color: Colors.orange.value
   ),
   Task(
       title: "SQL",
       note: "Lesson 2: NoSQL Database",
       startTime: DateTime(2023,10,10,12),
       endTime: DateTime(2023,10,10,13),
-      color: Colors.pink
+      color: Colors.pink.value
   ),
   Task(
       title: "Flutter",
       note: "Lesson 2: Navigation",
       startTime: DateTime(2023,10,10,13),
       endTime: DateTime(2023,10,10,14),
-      color: Colors.blue
+      color: Colors.blue.value
   ),
 ];
 
@@ -307,7 +307,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
       height: 93,
       margin: EdgeInsets.only(top: 5.0),
       padding: EdgeInsets.fromLTRB(16,16,16,10),
-      decoration: BoxDecoration(color: task.color, borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(color: Color(task.color), borderRadius: BorderRadius.circular(15)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

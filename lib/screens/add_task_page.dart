@@ -132,7 +132,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         note: _descriptionController.text,
         startTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, startTime.hour, startTime.minute),
         endTime : DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, endTime.hour, endTime.minute),
-        color: colorList[_selectedColor],
+        color: colorList[_selectedColor].value,
         remind: _selectedRemind,
         repeat: _selectedRepeat,
       );
