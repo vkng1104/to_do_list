@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/task.dart';
 import '../widgets/buttons.dart';
+import '../widgets/date_picker.dart';
 import '../widgets/seperator.dart';
 import 'add_task_page.dart';
 
@@ -153,7 +154,27 @@ class _AgendaScreenState extends State<AgendaScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
-            child: Container()
+            child: DatePicker(
+              _selectedDate,
+              height: 105,
+              width: 64,
+              initialSelectedDate: _selectedDate,
+              selectionColor: Color(0xFF2FD1C5),
+              deactivatedColor: Colors.white,
+              selectedTextColor: Colors.white,
+              dateTextStyle: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey
+              ),
+              dayTextStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey
+              ),
+              enabledMonthText: false,
+              onDateChange: (date) => setState(() => _selectedDate = date),
+            ),
           )
         ],
       ),
