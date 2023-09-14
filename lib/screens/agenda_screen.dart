@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../models/task.dart';
 import '../widgets/buttons.dart';
 import '../widgets/seperator.dart';
+import 'add_task_page.dart';
 
 List<Task> list = [
   Task(
@@ -62,7 +63,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   Text("Today")
                 ],
               ),
-              MyButton(label: "+ Add Task", onTap: () => null)
+              MyButton(label: "+ Add Task", onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddTaskPage()),
+                );
+                setState(() {});
+              },)
             ],
           ),
           // second part
@@ -220,7 +226,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                                     _addTask[index] ? Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        MyButton(label: "+ Add Task", onTap: () => null),
+                                        MyButton(label: "+ Add Task", onTap: () async {
+                                          await Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (context) => AddTaskPage()),
+                                          );
+                                          setState(() {});
+                                        },),
                                       ],
                                     ) : Container(height: 50,),
                                   ],
