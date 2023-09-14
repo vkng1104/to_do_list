@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../controllers/task_controller.dart';
 import '../models/task.dart';
 import '../widgets/buttons.dart';
 import 'agenda_screen.dart';
@@ -14,8 +15,9 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TaskController _taskController = Get.put(TaskController());
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _endTime = DateFormat("hh:mm a").format(DateTime.now().add(const Duration(hours: 1, minutes: 5))).toString();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now().add(const Duration(minutes: 5))).toString();
@@ -30,93 +32,91 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MyInputField(title: "Title", hint: "Enter your title", controller: _titleController,),
-                MyInputField(title: "Description", hint: "Enter your description", controller: _descriptionController),
-                MyInputField(title: "Date", hint: DateFormat.yMd().format(_selectedDate),
-                    widget: IconButton(
-                      icon: Icon(Icons.calendar_today_outlined),
-                      color: Colors.grey,
-                      onPressed: () => _getDateFromUser(),
-                    )),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MyInputField(
-                        title: "Start Date",
-                        hint: _startTime,
-                        widget: IconButton(
-                          icon: Icon(Icons.access_time_rounded,
-                            color: Colors.grey,),
-                          onPressed: () => _getTimeFromUser(),
-                        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyInputField(title: "Title", hint: "Enter your title", controller: _titleController,),
+              MyInputField(title: "Description", hint: "Enter your description", controller: _descriptionController),
+              MyInputField(title: "Date", hint: DateFormat.yMd().format(_selectedDate),
+                  widget: IconButton(
+                    icon: Icon(Icons.calendar_today_outlined),
+                    color: Colors.grey,
+                    onPressed: () => _getDateFromUser(),
+                  )),
+              Row(
+                children: [
+                  Expanded(
+                    child: MyInputField(
+                      title: "Start Date",
+                      hint: _startTime,
+                      widget: IconButton(
+                        icon: Icon(Icons.access_time_rounded,
+                          color: Colors.grey,),
+                        onPressed: () => _getTimeFromUser(),
                       ),
                     ),
-                    SizedBox(width: 12,),
-                    Expanded(
-                      child: MyInputField(
-                        title: "End Date",
-                        hint: _endTime,
-                        widget: IconButton(
-                          icon: Icon(Icons.access_time_rounded,
-                            color: Colors.grey,),
-                          onPressed: () => _getTimeFromUser(isStartTime: false),
-                        ),
+                  ),
+                  SizedBox(width: 12,),
+                  Expanded(
+                    child: MyInputField(
+                      title: "End Date",
+                      hint: _endTime,
+                      widget: IconButton(
+                        icon: Icon(Icons.access_time_rounded,
+                          color: Colors.grey,),
+                        onPressed: () => _getTimeFromUser(isStartTime: false),
                       ),
-                    )
+                    ),
+                  )
+                ],
+              ),
+              MyInputField(title: "Remind", hint: "$_selectedRemind minutes early",
+                  widget: DropdownButton(
+                    icon: Icon(Icons.keyboard_arrow_down,
+                      color: Colors.grey,),
+                    style: TextStyle(),
+                    underline: Container(height: 0,),
+                    iconSize: 32,
+                    elevation: 4,
+                    onChanged: (String? newValue) => setState(() => _selectedRemind = int.parse(newValue!)),
+                    items: remindList.map<DropdownMenuItem<String>>((int value) {
+                      return DropdownMenuItem<String>(
+                        value: value.toString(),
+                        child: Text(value.toString(), style: TextStyle(color: Colors.grey),),
+                      );
+                    }).toList(),
+                  )),
+              MyInputField(title: "Repeat", hint: _selectedRepeat,
+                  widget: DropdownButton(
+                    icon: Icon(Icons.keyboard_arrow_down,
+                      color: Colors.grey,),
+                    style: TextStyle(),
+                    underline: Container(height: 0,),
+                    iconSize: 32,
+                    elevation: 4,
+                    onChanged: (String? newValue) => setState(() => _selectedRepeat = newValue!),
+                    items: repeatList.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(color: Colors.grey),),
+                      );
+                    }).toList(),
+                  )),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _colorPallete(),
+                    MyButton(label: Text(
+                      "Create Task",
+                      style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+                    ), onTap: () => _validate())
                   ],
                 ),
-                MyInputField(title: "Remind", hint: "$_selectedRemind minutes early",
-                    widget: DropdownButton(
-                      icon: Icon(Icons.keyboard_arrow_down,
-                        color: Colors.grey,),
-                      style: TextStyle(),
-                      underline: Container(height: 0,),
-                      iconSize: 32,
-                      elevation: 4,
-                      onChanged: (String? newValue) => setState(() => _selectedRemind = int.parse(newValue!)),
-                      items: remindList.map<DropdownMenuItem<String>>((int value) {
-                        return DropdownMenuItem<String>(
-                          value: value.toString(),
-                          child: Text(value.toString(), style: TextStyle(color: Colors.grey),),
-                        );
-                      }).toList(),
-                    )),
-                MyInputField(title: "Repeat", hint: _selectedRepeat,
-                    widget: DropdownButton(
-                      icon: Icon(Icons.keyboard_arrow_down,
-                        color: Colors.grey,),
-                      style: TextStyle(),
-                      underline: Container(height: 0,),
-                      iconSize: 32,
-                      elevation: 4,
-                      onChanged: (String? newValue) => setState(() => _selectedRepeat = newValue!),
-                      items: repeatList.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value, style: TextStyle(color: Colors.grey),),
-                        );
-                      }).toList(),
-                    )),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _colorPallete(),
-                      MyButton(label: Text(
-                        "Create Task",
-                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
-                      ), onTap: () => _validate())
-                    ],
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         )
     );
@@ -137,6 +137,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         repeat: _selectedRepeat,
       );
       list.add(newTask);
+      _addTaskToDb(newTask);
       Get.back();
     }
     else {
@@ -161,6 +162,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
+  _addTaskToDb(Task newTask) async {
+    int id = await _taskController.addTask(task: newTask);
+    print("task is inserted at id = $id");
+  }
   _getDateFromUser() async{
     DateTime? _pickerDate = await showDatePicker(
         context: context,
